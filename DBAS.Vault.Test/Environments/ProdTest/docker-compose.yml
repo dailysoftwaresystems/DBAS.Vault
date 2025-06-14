@@ -1,0 +1,54 @@
+services:
+  DBAS.Vault-pipe-test.DBAS.Vault.Test:
+    image: ${DOCKER_REGISTRY-}dbas-vault-test
+    ports:
+      - "57302:443"
+    container_name: DBAS.Vault-pipe-test.DBAS.Vault.Test
+    hostname: pipe-test.dbas_vault_test
+    build:
+      context: ../../../
+      dockerfile: DBAS.Vault.Test/Environments/ProdTest/Dockerfile
+      args:
+        - APIEnvironment__Environment=ProdTest
+        - APIEnvironment__DatabaseHost=host.docker.internal
+        - APIEnvironment__DatabasePort=8989
+        - APIEnvironment__DatabaseUser=${MYSQL_USER}
+        - APIEnvironment__DatabasePassword=${MYSQL_PASSWORD}
+        - APIEnvironment__EncryptValues=True
+        - APIEnvironment__Secret=${SECRET}
+        - APIEnvironment__JWTIssuer=https://DBAS.Vault-pipe-test.DBAS.Vault.Test
+        - APIEnvironment__JWTAudience=DBAS.Vault-pipe-test.DBAS.Vault.Test
+        - APIEnvironment__KeyVaultAPIUrl=https://host.docker.internal:57303/
+        - APIEnvironment__ValidateIssuerSigningKey=False
+        - APIEnvironment__Accounts__0__Account=dbas-vault
+        - APIEnvironment__Accounts__0__Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIyIiwiTmFtZSI6ImRiYXMtdmF1bHQiLCJUZW5hbnRJZCI6IjA4ZTE3YzFmLWYzMTEtNGZmZi1iZGY0LWY3NmZlY2I0OTMyNiIsIkNsaWVudElkIjoiOGE5NTQ3NzYtNDU2OS00NWZmLWEwYjctYTliNTA3Yzg3ZjU4IiwibmJmIjoxNjk2OTYwNDY1LCJleHAiOjE2OTY5NjQwNjUsImlhdCI6MTY5Njk2MDQ2NSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.D0Z5vnFD6IapAkUWqErCg8txg7qMYz98q9xboO9ixJ4
+        - APIEnvironment__Accounts__1__Account=user-vault
+        - APIEnvironment__Accounts__1__Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIzIiwiTmFtZSI6InVzZXItdmF1bHQiLCJUZW5hbnRJZCI6ImI2OWZlMmMyLWZkOGQtNDFlYy04NzM4LTBkYTYxYmU3MWI1NiIsIkNsaWVudElkIjoiYmExYTA1ZDgtZTUxNi00N2JlLWI5YTktYzUzMDI3NTlkYWI2IiwibmJmIjoxNjk2OTYwNDc4LCJleHAiOjE2OTY5NjQwNzgsImlhdCI6MTY5Njk2MDQ3OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.R88CGkoAWVcJtZ6va96oFJAaUl78Ri45X8q36V1ZZQk
+    #env_file: ../../env.file
+    environment:
+      APIEnvironment__Environment: ProdTest
+      APIEnvironment__DatabaseHost: DBAS.Vault-pipe-test.db
+      APIEnvironment__DatabasePort: 3306
+      APIEnvironment__DatabaseUser: ${MYSQL_USER}
+      APIEnvironment__DatabasePassword: ${MYSQL_PASSWORD}
+      APIEnvironment__EncryptValues: "True"
+      APIEnvironment__Secret: ${SECRET}
+      APIEnvironment__JWTIssuer: https://DBAS.Vault-pipe-test.DBAS.Vault.Test
+      APIEnvironment__JWTAudience: DBAS.Vault-pipe-test.DBAS.Vault
+      APIEnvironment__KeyVaultAPIUrl: https://DBAS.Vault-pipe-test.DBAS.Vault.Test
+      APIEnvironment__ValidateIssuerSigningKey: "False"
+      APIEnvironment__Accounts__0__Account: dbas-vault
+      APIEnvironment__Accounts__0__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIyIiwiTmFtZSI6ImRiYXMtdmF1bHQiLCJUZW5hbnRJZCI6IjA4ZTE3YzFmLWYzMTEtNGZmZi1iZGY0LWY3NmZlY2I0OTMyNiIsIkNsaWVudElkIjoiOGE5NTQ3NzYtNDU2OS00NWZmLWEwYjctYTliNTA3Yzg3ZjU4IiwibmJmIjoxNjk2OTYwNDY1LCJleHAiOjE2OTY5NjQwNjUsImlhdCI6MTY5Njk2MDQ2NSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.D0Z5vnFD6IapAkUWqErCg8txg7qMYz98q9xboO9ixJ4
+      APIEnvironment__Accounts__1__Account: user-vault
+      APIEnvironment__Accounts__1__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIzIiwiTmFtZSI6InVzZXItdmF1bHQiLCJUZW5hbnRJZCI6ImI2OWZlMmMyLWZkOGQtNDFlYy04NzM4LTBkYTYxYmU3MWI1NiIsIkNsaWVudElkIjoiYmExYTA1ZDgtZTUxNi00N2JlLWI5YTktYzUzMDI3NTlkYWI2IiwibmJmIjoxNjk2OTYwNDc4LCJleHAiOjE2OTY5NjQwNzgsImlhdCI6MTY5Njk2MDQ3OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.R88CGkoAWVcJtZ6va96oFJAaUl78Ri45X8q36V1ZZQk
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443
+    #secrets:
+    #  - secret_file
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ../../../:/app/src/:rw
+#secrets:
+#  name:
+#    file: ./name

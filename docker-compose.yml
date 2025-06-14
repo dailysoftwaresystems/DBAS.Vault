@@ -1,0 +1,59 @@
+services:
+  dbas-vault-local-test-app:
+    image: ${DOCKER_REGISTRY:-}dbas-vault
+    ports:
+      - "57304:443"
+    container_name: dbas-vault-local-test-app
+    hostname: dbas-vault-local-test-app
+    build:
+      context: .
+      dockerfile: DBAS.Vault/Environments/Local/Dockerfile
+    #env_file: ../../env.file
+    networks:
+        dbas-vault-local-test:
+          aliases:
+          - "dbas-vault-local-test"
+    depends_on:
+      - dbas-vault-local-test-db
+    environment:
+      APIEnvironment__Accounts__0__Account: dbas-vault
+      APIEnvironment__Accounts__0__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIyIiwiTmFtZSI6ImRiYXMtdmF1bHQiLCJUZW5hbnRJZCI6IjA4ZTE3YzFmLWYzMTEtNGZmZi1iZGY0LWY3NmZlY2I0OTMyNiIsIkNsaWVudElkIjoiOGE5NTQ3NzYtNDU2OS00NWZmLWEwYjctYTliNTA3Yzg3ZjU4IiwibmJmIjoxNjk2OTYwNDY1LCJleHAiOjE2OTY5NjQwNjUsImlhdCI6MTY5Njk2MDQ2NSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.D0Z5vnFD6IapAkUWqErCg8txg7qMYz98q9xboO9ixJ4
+      APIEnvironment__Accounts__1__Account: user-vault
+      APIEnvironment__Accounts__1__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIzIiwiTmFtZSI6InVzZXItdmF1bHQiLCJUZW5hbnRJZCI6ImI2OWZlMmMyLWZkOGQtNDFlYy04NzM4LTBkYTYxYmU3MWI1NiIsIkNsaWVudElkIjoiYmExYTA1ZDgtZTUxNi00N2JlLWI5YTktYzUzMDI3NTlkYWI2IiwibmJmIjoxNjk2OTYwNDc4LCJleHAiOjE2OTY5NjQwNzgsImlhdCI6MTY5Njk2MDQ3OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.R88CGkoAWVcJtZ6va96oFJAaUl78Ri45X8q36V1ZZQk
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443
+    #secrets:
+    #  - secret_file
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./DBAS.Vault/:/app/src/:ro
+  dbas-vault-local-test-db:
+    container_name: dbas-vault-local-test-db
+    hostname: dbas-vault-local-test-db
+    image: mysql:latest
+    ports:
+      - "9090:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
+    networks:
+        dbas-vault-local-test:
+          aliases:
+          - "dbas-vault-local-test-db"
+    volumes:
+        - local-test.db-volume:/var/lib/mysql:delegated
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 3s
+      timeout: 1s
+      retries: 3
+networks:
+  dbas-vault-local-test:
+    name: dbas-vault-local-test
+    driver: bridge
+volumes:
+  local-test.db-volume:
+    name: dbas-vault-local-test-db-volume
+#secrets:
+#  name:
+#    file: ./name

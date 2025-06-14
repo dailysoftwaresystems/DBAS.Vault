@@ -1,0 +1,63 @@
+services:
+  dbas-vault-pipe-test.dbas-vault:
+    image: ${DOCKER_REGISTRY-}dbas-vault
+    ports:
+      - "57303:443"
+    container_name: dbas-vault-pipe-test.dbas_vault
+    hostname: pipe-test.dbas_vault
+    build:
+      context: ../../../../
+      dockerfile: dbas-vault/dbas-vault/Environments/ProdTest/Dockerfile
+    #env_file: ../../env.file
+    networks:
+        dbas-vault-pipe-test:
+    depends_on:
+      - dbas-vault-pipe-test.db
+    environment:
+      APIEnvironment__Environment: LocalApp
+      APIEnvironment__DatabaseHost: dbas-vault-pipe-test.db
+      APIEnvironment__DatabasePort: 3306
+      APIEnvironment__DatabaseUser: ${MYSQL_USER}
+      APIEnvironment__DatabasePassword: ${MYSQL_PASSWORD}
+      APIEnvironment__EncryptValues: "True"
+      APIEnvironment__Secret: ${SECRET}
+      APIEnvironment__JWTIssuer: https://dbas-vault-pipe-test.dbas-vault
+      APIEnvironment__JWTAudience: dbas-vault-pipe-test.dbas-vault
+      APIEnvironment__KeyVaultAPIUrl: https://dbas-vault-pipe-test.dbas-vault
+      APIEnvironment__ValidateIssuerSigningKey: "False"
+      APIEnvironment__Accounts__0__Account: dbas-vault
+      APIEnvironment__Accounts__0__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIyIiwiTmFtZSI6ImRiYXMtdmF1bHQiLCJUZW5hbnRJZCI6IjA4ZTE3YzFmLWYzMTEtNGZmZi1iZGY0LWY3NmZlY2I0OTMyNiIsIkNsaWVudElkIjoiOGE5NTQ3NzYtNDU2OS00NWZmLWEwYjctYTliNTA3Yzg3ZjU4IiwibmJmIjoxNjk2OTYwNDY1LCJleHAiOjE2OTY5NjQwNjUsImlhdCI6MTY5Njk2MDQ2NSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.D0Z5vnFD6IapAkUWqErCg8txg7qMYz98q9xboO9ixJ4
+      APIEnvironment__Accounts__1__Account: user-vault
+      APIEnvironment__Accounts__1__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIzIiwiTmFtZSI6InVzZXItdmF1bHQiLCJUZW5hbnRJZCI6ImI2OWZlMmMyLWZkOGQtNDFlYy04NzM4LTBkYTYxYmU3MWI1NiIsIkNsaWVudElkIjoiYmExYTA1ZDgtZTUxNi00N2JlLWI5YTktYzUzMDI3NTlkYWI2IiwibmJmIjoxNjk2OTYwNDc4LCJleHAiOjE2OTY5NjQwNzgsImlhdCI6MTY5Njk2MDQ3OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.R88CGkoAWVcJtZ6va96oFJAaUl78Ri45X8q36V1ZZQk
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443
+    #secrets:
+    #  - secret_file
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ../../../../:/app/src/:ro
+  dbas-vault-pipe-test.db:
+    container_name: dbas-vault-pipe-test.db
+    hostname: dbas-vault-pipe-test.db
+    image: mysql:latest
+    ports:
+      - "8989:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+        dbas-vault-pipe-test:
+    volumes:
+        - dbas-vault-pipe-test.db-volume:/var/lib/mysql:delegated
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 3s
+      timeout: 1s
+      retries: 3
+networks:
+  dbas-vault-pipe-test:
+volumes:
+  dbas-vault-pipe-test.db-volume:
+#secrets:
+#  name:
+#    file: ./name

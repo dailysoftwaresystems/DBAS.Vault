@@ -1,0 +1,102 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+name: .NET Pipeline
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_call:
+    secrets:
+      MYSQL_USER:
+        required: true
+      MYSQL_PASSWORD:
+        required: true
+      SECRET:
+        required: true
+jobs:
+  build-test:
+    runs-on: self-hosted
+    env:
+      DOTNET_INSTALL_DIR: ~/dotnet
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: ${{github.workspace}}
+    - name: Auto set package version from project
+      run: |
+        version=$(grep -oP '<Version>\K[^<]+' DBAS.Vault/DBAS.Vault/DBAS.Vault.csproj)
+        echo "Building version: $version"
+        echo "VERSION=$version" >> $GITHUB_ENV
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 9.0.x
+        dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
+    - name: Set up Docker Compose
+      run: |
+          apt-get --yes install docker-compose
+    - name: Start database and DBAS.Vault API
+      run: |
+         docker-compose -f DBAS.Vault/DBAS.Vault/Environments/ProdTest/docker-compose.yml -p DBAS.Vault-pipe up -d --build
+      env:
+          MYSQL_USER: ${{secrets.MYSQL_USER}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          SECRET: ${{secrets.SECRET}}
+    - name: Run Tests
+      run: |
+         docker-compose -f DBAS.Vault-test/Environments/ProdTest/docker-compose.yml -p DBAS.Vault-pipe-test up -d --build
+      env:
+          MYSQL_USER: ${{secrets.MYSQL_USER}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          SECRET: ${{secrets.SECRET}}
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Release ${{ env.VERSION }}
+        tag_name: ${{ env.VERSION }}
+        body: Release ${{ env.VERSION }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Login to GitHub Container Registry
+      run: docker login docker.pkg.github.com -u ${{ github.repository_owner }} -p ${{ secrets.GITHUB_TOKEN }}
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Update README version
+      run: |
+          PATTERN="# DBAS.Vault (\w)*(\.[0-9]+)*(-*)*"
+          REPLACEMENT="# DBAS.Vault ${{ env.VERSION }}"
+          sed -E -i "s/$PATTERN/$REPLACEMENT/g" README.md
+          git config --global user.name ${{ github.event.pusher.name }}
+          git config --global user.email ${{ github.event.pusher.email }}
+          git add README.md
+          if git status --porcelain | grep -E '^\s?[MA]'; then
+            git commit -m "Updating README to version ${{ env.VERSION }}"
+            git push
+          else
+            echo "Version did not change"
+          fi
+    - name: Tag GitHub Container Docker Image
+      run: |
+          docker tag DBAS.Vault:latest docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:latest
+          docker tag DBAS.Vault:latest docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:${{ env.VERSION }}
+    - name: Push GitHub Container Docker Image
+      run: |
+          docker push docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:latest
+          docker push docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:${{ env.VERSION }}
+    - name: Tag Docker Image
+      run: |
+          docker tag DBAS.Vault:latest ${{ github.repository_owner }}/DBAS.Vault:latest
+          docker tag DBAS.Vault:latest ${{ github.repository_owner }}/DBAS.Vault:${{ env.VERSION }}
+    - name: Push Docker Image
+      run: |
+          docker push ${{ github.repository_owner }}/DBAS.Vault:latest
+          docker push ${{ github.repository_owner }}/DBAS.Vault:${{ env.VERSION }}
+    - name: Tear Down Docker Compose
+      run: |
+          docker-compose -f DBAS.Vault-test/Environments/ProdTest/docker-compose.yml down
+          docker-compose -f DBAS.Vault/DBAS.Vault/Environments/ProdTest/docker-compose.yml down
+      if: always()
+      timeout-minutes: 10
