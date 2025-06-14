@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
 WORKDIR /app
 RUN rm -rf /app
 COPY . ./src
-RUN dotnet user-secrets -p /app/src/DBAS.Vault/DBAS.Vault/DBAS.Vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
+RUN dotnet user-secrets -p /app/src/DBAS.Vault/DBAS.Vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 
 FROM base AS build-env
 WORKDIR /app
