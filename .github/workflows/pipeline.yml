@@ -38,14 +38,14 @@ jobs:
           apt-get --yes install docker-compose
     - name: Start database and DBAS.Vault API
       run: |
-         docker-compose -f DBAS.Vault/DBAS.Vault/Environments/ProdTest/docker-compose.yml -p DBAS.Vault-pipe up -d --build
+         docker-compose -f DBAS.Vault/DBAS.Vault/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe up -d --build
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
           SECRET: ${{secrets.SECRET}}
     - name: Run Tests
       run: |
-         docker-compose -f DBAS.Vault-test/Environments/ProdTest/docker-compose.yml -p DBAS.Vault-pipe-test up -d --build
+         docker-compose -f DBAS.Vault.Test/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe-test up -d --build
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
@@ -80,23 +80,23 @@ jobs:
           fi
     - name: Tag GitHub Container Docker Image
       run: |
-          docker tag DBAS.Vault:latest docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:latest
-          docker tag DBAS.Vault:latest docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:${{ env.VERSION }}
+          docker tag dbas-vault:latest docker.pkg.github.com/${{ github.repository }}/dbas-vault:latest
+          docker tag dbas-vault:latest docker.pkg.github.com/${{ github.repository }}/dbas-vault:${{ env.VERSION }}
     - name: Push GitHub Container Docker Image
       run: |
-          docker push docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:latest
-          docker push docker.pkg.github.com/${{ github.repository }}/DBAS.Vault:${{ env.VERSION }}
+          docker push docker.pkg.github.com/${{ github.repository }}/dbas-vault:latest
+          docker push docker.pkg.github.com/${{ github.repository }}/dbas-vault:${{ env.VERSION }}
     - name: Tag Docker Image
       run: |
-          docker tag DBAS.Vault:latest ${{ github.repository_owner }}/DBAS.Vault:latest
-          docker tag DBAS.Vault:latest ${{ github.repository_owner }}/DBAS.Vault:${{ env.VERSION }}
+          docker tag dbas-vault:latest ${{ github.repository_owner }}/dbas-vault:latest
+          docker tag dbas-vault:latest ${{ github.repository_owner }}/dbas-vault:${{ env.VERSION }}
     - name: Push Docker Image
       run: |
-          docker push ${{ github.repository_owner }}/DBAS.Vault:latest
-          docker push ${{ github.repository_owner }}/DBAS.Vault:${{ env.VERSION }}
+          docker push ${{ github.repository_owner }}/dbas-vault:latest
+          docker push ${{ github.repository_owner }}/dbas-vault:${{ env.VERSION }}
     - name: Tear Down Docker Compose
       run: |
-          docker-compose -f DBAS.Vault-test/Environments/ProdTest/docker-compose.yml down
+          docker-compose -f DBAS.Vault.Test/Environments/ProdTest/docker-compose.yml down
           docker-compose -f DBAS.Vault/DBAS.Vault/Environments/ProdTest/docker-compose.yml down
       if: always()
       timeout-minutes: 10

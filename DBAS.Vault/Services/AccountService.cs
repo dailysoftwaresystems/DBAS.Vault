@@ -1,5 +1,5 @@
 ﻿using DBAS.Vault.Database.Interfaces;
-using DBAS.Vault.Initializer.Jwt.Interfaces;
+using DBAS.Vault.Jwt.Interfaces;
 using DBAS.Vault.Models;
 using DBAS.Vault.Properties;
 using DBAS.Vault.Services.Interfaces;

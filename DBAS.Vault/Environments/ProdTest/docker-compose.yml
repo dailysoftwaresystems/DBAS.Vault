@@ -1,29 +1,29 @@
 services:
-  dbas-vault-pipe-test.dbas-vault:
-    image: ${DOCKER_REGISTRY-}dbas-vault
+  dbas-vault-pipe-test-app:
+    image: ${DOCKER_REGISTRY:-}dbas-vault
     ports:
       - "57303:443"
-    container_name: dbas-vault-pipe-test.dbas_vault
-    hostname: pipe-test.dbas_vault
+    container_name: dbas-vault-pipe-test-app
+    hostname: dbas-vault-pipe-test-app
     build:
       context: ../../../../
-      dockerfile: dbas-vault/dbas-vault/Environments/ProdTest/Dockerfile
+      dockerfile: DBAS.Vault/DBAS.Vault/Environments/ProdTest/Dockerfile
     #env_file: ../../env.file
     networks:
         dbas-vault-pipe-test:
     depends_on:
-      - dbas-vault-pipe-test.db
+      - dbas-vault-pipe-test-db
     environment:
       APIEnvironment__Environment: LocalApp
-      APIEnvironment__DatabaseHost: dbas-vault-pipe-test.db
+      APIEnvironment__DatabaseHost: dbas-vault-pipe-test-db
       APIEnvironment__DatabasePort: 3306
       APIEnvironment__DatabaseUser: ${MYSQL_USER}
       APIEnvironment__DatabasePassword: ${MYSQL_PASSWORD}
       APIEnvironment__EncryptValues: "True"
       APIEnvironment__Secret: ${SECRET}
-      APIEnvironment__JWTIssuer: https://dbas-vault-pipe-test.dbas-vault
-      APIEnvironment__JWTAudience: dbas-vault-pipe-test.dbas-vault
-      APIEnvironment__KeyVaultAPIUrl: https://dbas-vault-pipe-test.dbas-vault
+      APIEnvironment__JWTIssuer: https://dbas-vault-pipe-test-app
+      APIEnvironment__JWTAudience: dbas-vault-pipe-test-app
+      APIEnvironment__KeyVaultAPIUrl: https://dbas-vault-pipe-test-app
       APIEnvironment__ValidateIssuerSigningKey: "False"
       APIEnvironment__Accounts__0__Account: dbas-vault
       APIEnvironment__Accounts__0__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIyIiwiTmFtZSI6ImRiYXMtdmF1bHQiLCJUZW5hbnRJZCI6IjA4ZTE3YzFmLWYzMTEtNGZmZi1iZGY0LWY3NmZlY2I0OTMyNiIsIkNsaWVudElkIjoiOGE5NTQ3NzYtNDU2OS00NWZmLWEwYjctYTliNTA3Yzg3ZjU4IiwibmJmIjoxNjk2OTYwNDY1LCJleHAiOjE2OTY5NjQwNjUsImlhdCI6MTY5Njk2MDQ2NSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.D0Z5vnFD6IapAkUWqErCg8txg7qMYz98q9xboO9ixJ4
@@ -37,9 +37,9 @@ services:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ../../../../:/app/src/:ro
-  dbas-vault-pipe-test.db:
-    container_name: dbas-vault-pipe-test.db
-    hostname: dbas-vault-pipe-test.db
+  dbas-vault-pipe-test-db:
+    container_name: dbas-vault-pipe-test-db
+    hostname: dbas-vault-pipe-test-db
     image: mysql:latest
     ports:
       - "8989:3306"
@@ -48,7 +48,7 @@ services:
     networks:
         dbas-vault-pipe-test:
     volumes:
-        - dbas-vault-pipe-test.db-volume:/var/lib/mysql:delegated
+        - dbas-vault-pipe-test-app-db-volume:/var/lib/mysql:delegated
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 3s
@@ -57,7 +57,7 @@ services:
 networks:
   dbas-vault-pipe-test:
 volumes:
-  dbas-vault-pipe-test.db-volume:
+  dbas-vault-pipe-test-app-db-volume:
 #secrets:
 #  name:
 #    file: ./name

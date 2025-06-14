@@ -1,4 +1,4 @@
-﻿namespace DBAS.Vault.Initializer.Jwt.Interfaces
+﻿namespace DBAS.Vault.Jwt.Interfaces
 {
     public interface IEncryption
 	{

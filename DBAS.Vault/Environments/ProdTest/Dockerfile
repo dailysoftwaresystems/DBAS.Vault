@@ -14,8 +14,8 @@ RUN dotnet publish /app/src/DBAS.Vault/DBAS.Vault/DBAS.Vault.csproj --configurat
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
-COPY ./DBAS.Vault/DBAS.Vault/Environments/ProdTest/DBAS.Vault.pfx /usr/local/share/ca-certificates/
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password=DBAS.Vault
+COPY ./DBAS.Vault/DBAS.Vault/Environments/ProdTest/key-vault.pfx /usr/local/share/ca-certificates/
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=key-vault
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/key-vault.pfx
 RUN apt-get update && apt-get install -y curl default-mysql-client ca-certificates && update-ca-certificates
 HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail

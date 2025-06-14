@@ -18,7 +18,7 @@ csharp_prefer_braces = true:silent
 csharp_style_namespace_declarations = block_scoped:silent
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
-csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_primary_constructors = true:none
 csharp_style_expression_bodied_methods = false:silent
 csharp_style_expression_bodied_constructors = false:silent
 csharp_style_expression_bodied_operators = false:silent
@@ -61,6 +61,9 @@ dotnet_diagnostic.CS8600.severity = none
 
 # CS8602: Dereference of a possibly null reference.
 dotnet_diagnostic.CS8602.severity = none
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
 
 [*.{cs,vb}]
 #### Naming styles ####

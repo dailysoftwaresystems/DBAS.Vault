@@ -1,12 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DBAS.Vault.Models;
-using DBAS.Vault.Initializer.Jwt.Interfaces;
+using DBAS.Vault.Jwt.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace DBAS.Vault.Initializer.Jwt
+namespace DBAS.Vault.Jwt
 {
     public class Encryption : IEncryption
     {
@@ -23,13 +23,13 @@ namespace DBAS.Vault.Initializer.Jwt
             var key = Encoding.UTF8.GetBytes(Environment.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(nameof(Account.AccountId), accountId.ToString()),
-                    new Claim(nameof(Account.Name), accountName),
-                    new Claim(nameof(Account.TenantId), tenantId.ToString()),
-                    new Claim(nameof(Account.ClientId), clientId.ToString())
-                }),
+                Subject = new ClaimsIdentity(
+                [
+                    new(nameof(Account.AccountId), accountId.ToString()),
+                    new(nameof(Account.Name), accountName),
+                    new(nameof(Account.TenantId), tenantId.ToString()),
+                    new(nameof(Account.ClientId), clientId.ToString())
+                ]),
                 Issuer = Environment.JWTIssuer,
                 Audience = Environment.JWTAudience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -69,7 +69,7 @@ namespace DBAS.Vault.Initializer.Jwt
             };
         }
 
-        private byte[] DeriveKeyFromPassword(string password)
+        private static byte[] DeriveKeyFromPassword(string password)
         {
             var emptySalt = Array.Empty<byte>();
             var iterations = 1000;

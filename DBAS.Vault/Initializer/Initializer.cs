@@ -1,7 +1,7 @@
 ﻿using DBAS.Vault.Database;
 using DBAS.Vault.Database.Interfaces;
-using DBAS.Vault.Initializer.Jwt.Interfaces;
-using DBAS.Vault.Initializer.Jwt;
+using DBAS.Vault.Jwt.Interfaces;
+using DBAS.Vault.Jwt;
 using DBAS.Vault.Models;
 using DBAS.Vault.Services.Interfaces;
 using DBAS.Vault.Services;
@@ -115,7 +115,7 @@ namespace DBAS.Vault.Initializer
         private static void FillInitialData(APIEnvironment env, IEncryption encryption)
         {
             using var serviceDb = new MySqlDb(env);
-            AccountService service = new (serviceDb, encryption);
+            AccountService service = new(serviceDb, encryption);
 
             foreach (var account in env.Accounts)
             {
