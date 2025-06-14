@@ -35,17 +35,18 @@ jobs:
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
     - name: Set up Docker Compose
       run: |
-          apt-get --yes install docker-compose
+          sudo apt-get update
+          sudo apt-get --yes install docker-compose
     - name: Start database and DBAS.Vault API
       run: |
-         docker-compose -f DBAS.Vault/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe up -d --build
+         docker compose -f DBAS.Vault/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe up -d --build
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
           SECRET: ${{secrets.SECRET}}
     - name: Run Tests
       run: |
-         docker-compose -f DBAS.Vault.Test/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe-test up -d --build
+         docker compose -f DBAS.Vault.Test/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe-test up -d --build
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
@@ -96,7 +97,7 @@ jobs:
           docker push ${{ github.repository_owner }}/dbas-vault:${{ env.VERSION }}
     - name: Tear Down Docker Compose
       run: |
-          docker-compose -f DBAS.Vault.Test/Environments/ProdTest/docker-compose.yml down
-          docker-compose -f DBAS.Vault/Environments/ProdTest/docker-compose.yml down
+          docker compose -f DBAS.Vault.Test/Environments/ProdTest/docker-compose.yml down
+          docker compose -f DBAS.Vault/Environments/ProdTest/docker-compose.yml down
       if: always()
       timeout-minutes: 10
