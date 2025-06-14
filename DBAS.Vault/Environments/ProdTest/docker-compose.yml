@@ -6,8 +6,8 @@ services:
     container_name: dbas-vault-pipe-test-app
     hostname: dbas-vault-pipe-test-app
     build:
-      context: ../../../../
-      dockerfile: DBAS.Vault/DBAS.Vault/Environments/ProdTest/Dockerfile
+      context: ../../../
+      dockerfile: DBAS.Vault/Environments/ProdTest/Dockerfile
     #env_file: ../../env.file
     networks:
         dbas-vault-pipe-test:

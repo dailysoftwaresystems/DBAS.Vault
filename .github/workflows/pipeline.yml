@@ -25,7 +25,7 @@ jobs:
         path: ${{github.workspace}}
     - name: Auto set package version from project
       run: |
-        version=$(grep -oP '<Version>\K[^<]+' DBAS.Vault/DBAS.Vault/DBAS.Vault.csproj)
+        version=$(grep -oP '<Version>\K[^<]+' DBAS.Vault/DBAS.Vault.csproj)
         echo "Building version: $version"
         echo "VERSION=$version" >> $GITHUB_ENV
     - name: Setup .NET
@@ -38,7 +38,7 @@ jobs:
           apt-get --yes install docker-compose
     - name: Start database and DBAS.Vault API
       run: |
-         docker-compose -f DBAS.Vault/DBAS.Vault/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe up -d --build
+         docker-compose -f DBAS.Vault/Environments/ProdTest/docker-compose.yml -p dbas-vault-pipe up -d --build
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
@@ -97,6 +97,6 @@ jobs:
     - name: Tear Down Docker Compose
       run: |
           docker-compose -f DBAS.Vault.Test/Environments/ProdTest/docker-compose.yml down
-          docker-compose -f DBAS.Vault/DBAS.Vault/Environments/ProdTest/docker-compose.yml down
+          docker-compose -f DBAS.Vault/Environments/ProdTest/docker-compose.yml down
       if: always()
       timeout-minutes: 10
