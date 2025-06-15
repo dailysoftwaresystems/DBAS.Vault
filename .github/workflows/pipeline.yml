@@ -82,8 +82,8 @@ jobs:
           fi
     - name: Tag GitHub Container Docker Image
       run: |
-          docker tag dbas-vault:latest ghcr.io/${REPO_LC}/dbas-vault:latest
-          docker tag dbas-vault:latest ghcr.io/${REPO_LC}/dbas-vault:${{ env.VERSION }}
+          docker tag dbas-vault:latest ghcr.io/${{ env.REPO_LC }}/dbas-vault:latest
+          docker tag dbas-vault:latest ghcr.io/${{ env.REPO_LC }}/dbas-vault:${{ env.VERSION }}
     - name: Push GitHub Container Docker Image
       run: |
           docker push ghcr.io/${{ env.REPO_LC }}/dbas-vault:latest
