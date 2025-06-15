@@ -60,7 +60,7 @@ namespace DBAS.Vault.Database
             return Connection;
         }
 
-        public DbCommand CreateComand(string query)
+        public DbCommand CreateCommand(string query)
         {
             var cmd = Connection.CreateCommand();
             cmd.Connection = Connection;
@@ -120,7 +120,7 @@ namespace DBAS.Vault.Database
             await Transaction?.RollbackAsync();
         }
 
-        public bool IsHealhty()
+        public bool IsHealthy()
         {
             return Connection.Ping();
         }

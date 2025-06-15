@@ -29,7 +29,7 @@ namespace DBAS.Vault.Test.Tests
             }
 
             var db = GetService<IDatabase>();
-            using var cmd = db.CreateComand(Strings.BaseTest_CleanUpSecretKey);
+            using var cmd = db.CreateCommand(Strings.BaseTest_CleanUpSecretKey);
             cmd.Parameters.Add(db.GetParameter(nameof(Account.AccountId), Account.AccountId));
             cmd.ExecuteNonQueryAsync().Wait();
 

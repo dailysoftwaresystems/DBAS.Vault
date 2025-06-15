@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Environments\ProdTest\my.cnf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Properties\launchSettings.json" />
   </ItemGroup>
 

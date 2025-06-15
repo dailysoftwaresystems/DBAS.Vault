@@ -90,7 +90,7 @@ namespace DBAS.Vault.Test.Tests
             await secretService.Delete(account.Name, secretName);
 
             var db = GetService<IDatabase>();
-            using var cmd = db.CreateComand(Strings.SecretTest_DeletedSecret);
+            using var cmd = db.CreateCommand(Strings.SecretTest_DeletedSecret);
             cmd.Parameters.Add(db.GetParameter(nameof(SecretResponse.name), secret.name));
 
             var deleted = await cmd.ExecuteScalarAsync();

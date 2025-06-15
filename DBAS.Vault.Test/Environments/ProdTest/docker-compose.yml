@@ -16,8 +16,8 @@ services:
         - APIEnvironment__DatabasePassword=${MYSQL_PASSWORD}
         - APIEnvironment__EncryptValues=True
         - APIEnvironment__Secret=${SECRET}
-        - APIEnvironment__JWTIssuer=https://DBAS.Vault-pipe-test.DBAS.Vault.Test
-        - APIEnvironment__JWTAudience=DBAS.Vault-pipe-test.DBAS.Vault.Test
+        - APIEnvironment__JWTIssuer=https://dbas-vault-pipe-test-app/
+        - APIEnvironment__JWTAudience=dbas-vault-pipe-test-app-test
         - APIEnvironment__KeyVaultAPIUrl=https://host.docker.internal:57303/
         - APIEnvironment__ValidateIssuerSigningKey=False
         - APIEnvironment__Accounts__0__Account=dbas-vault
@@ -33,9 +33,9 @@ services:
       APIEnvironment__DatabasePassword: ${MYSQL_PASSWORD}
       APIEnvironment__EncryptValues: "True"
       APIEnvironment__Secret: ${SECRET}
-      APIEnvironment__JWTIssuer: https://dbas-vault-pipe-test-app-test
+      APIEnvironment__JWTIssuer: https://dbas-vault-pipe-test-app/
       APIEnvironment__JWTAudience: dbas-vault-pipe-test-app-test
-      APIEnvironment__KeyVaultAPIUrl: https://dbas-vault-pipe-test-app-test
+      APIEnvironment__KeyVaultAPIUrl: https://dbas-vault-pipe-test-app/
       APIEnvironment__ValidateIssuerSigningKey: "False"
       APIEnvironment__Accounts__0__Account: dbas-vault
       APIEnvironment__Accounts__0__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIyIiwiTmFtZSI6ImRiYXMtdmF1bHQiLCJUZW5hbnRJZCI6IjA4ZTE3YzFmLWYzMTEtNGZmZi1iZGY0LWY3NmZlY2I0OTMyNiIsIkNsaWVudElkIjoiOGE5NTQ3NzYtNDU2OS00NWZmLWEwYjctYTliNTA3Yzg3ZjU4IiwibmJmIjoxNjk2OTYwNDY1LCJleHAiOjE2OTY5NjQwNjUsImlhdCI6MTY5Njk2MDQ2NSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.D0Z5vnFD6IapAkUWqErCg8txg7qMYz98q9xboO9ixJ4
@@ -49,6 +49,9 @@ services:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ../../../:/app/src/:rw
+networks:
+  dbas-vault-pipe-test:
+    external: true
 #secrets:
 #  name:
 #    file: ./name

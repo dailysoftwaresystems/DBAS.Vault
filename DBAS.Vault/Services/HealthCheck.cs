@@ -17,7 +17,7 @@ namespace DBAS.Vault.Services
         {
             using var db = new MySqlDb(Environment);
 
-            if (db.IsHealhty())
+            if (db.IsHealthy())
             {
                 return await Task.FromResult(HealthCheckResult.Healthy(nameof(HealthCheck)));
             }

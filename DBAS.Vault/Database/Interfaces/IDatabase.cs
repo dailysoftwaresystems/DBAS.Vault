@@ -8,7 +8,7 @@ namespace DBAS.Vault.Database.Interfaces
 
         public DbConnection GetConnection();
 
-        public DbCommand CreateComand(string query);
+        public DbCommand CreateCommand(string query);
 
         public DbParameter GetParameter(string name, object value);
 
@@ -22,6 +22,6 @@ namespace DBAS.Vault.Database.Interfaces
 
         public Task Rollback();
 
-        public bool IsHealhty();
+        public bool IsHealthy();
     }
 }

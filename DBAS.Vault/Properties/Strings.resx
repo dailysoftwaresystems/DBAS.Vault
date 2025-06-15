@@ -158,7 +158,7 @@ VALUES
     <value>Application failed to ping MySql host {0}:{1}.</value>
   </data>
   <data name="ConnectionString" xml:space="preserve">
-    <value>Server={0};Port={1};User ID={2};Password={3};{4}</value>
+    <value>Server={0};Port={1};User ID={2};Password={3};{4};AllowPublicKeyRetrieval=True;SslMode=None;</value>
   </data>
   <data name="CreateDatabaseString" xml:space="preserve">
     <value>CREATE DATABASE IF NOT EXISTS {0}</value>

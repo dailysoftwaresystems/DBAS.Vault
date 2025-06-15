@@ -62,7 +62,7 @@ namespace DBAS.Vault.Services
         {
             var account = await AccountService.GetByName(accountName) ?? throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, name, accountName));
 
-            using var cmd = Database.CreateComand(string.IsNullOrEmpty(version) ? Strings.SecretService_Get : Strings.SecretService_GetVersion);
+            using var cmd = Database.CreateCommand(string.IsNullOrEmpty(version) ? Strings.SecretService_Get : Strings.SecretService_GetVersion);
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), account.AccountId));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), name));
 
@@ -118,7 +118,7 @@ namespace DBAS.Vault.Services
                     secretKey.Value = Encryption.Encrypt(secretKey.Value);
                 }
 
-                using var cmd = Database.CreateComand(Strings.SecretService_Create);
+                using var cmd = Database.CreateCommand(Strings.SecretService_Create);
                 cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), secretKey.AccountId));
                 cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), secretKey.Name));
                 cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Description), (object)secretKey.Description ?? DBNull.Value));
@@ -141,7 +141,7 @@ namespace DBAS.Vault.Services
 
             var dbSecret = await Get(accountName, name, null);
 
-            using var cmd = Database.CreateComand(Strings.SecretService_Delete);
+            using var cmd = Database.CreateCommand(Strings.SecretService_Delete);
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), account.AccountId.Value));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), name));
 

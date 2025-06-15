@@ -70,7 +70,7 @@ namespace DBAS.Vault.Test.Tests
             await service.Delete(account.AccountId);
 
             var db = GetService<IDatabase>();
-            using var cmd = db.CreateComand(Strings.AccountTest_DeletedAccount);
+            using var cmd = db.CreateCommand(Strings.AccountTest_DeletedAccount);
             cmd.Parameters.Add(db.GetParameter(nameof(Account.AccountId), account.AccountId));
 
             var deleted = await cmd.ExecuteScalarAsync();

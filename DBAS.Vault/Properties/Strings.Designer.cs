@@ -155,7 +155,7 @@ namespace DBAS.Vault.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server={0};Port={1};User ID={2};Password={3};{4}.
+        ///   Looks up a localized string similar to Server={0};Port={1};User ID={2};Password={3};{4};AllowPublicKeyRetrieval=True;SslMode=None;.
         /// </summary>
         public static string ConnectionString {
             get {

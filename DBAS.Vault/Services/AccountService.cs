@@ -24,7 +24,7 @@ namespace DBAS.Vault.Services
                 throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, Strings.NullRepresentation));
             }
 
-            using var cmd = Database.CreateComand(Strings.AccountService_Get);
+            using var cmd = Database.CreateCommand(Strings.AccountService_Get);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), accountId));
 
             using var reader = await cmd.ExecuteReaderAsync();
@@ -52,7 +52,7 @@ namespace DBAS.Vault.Services
                 return null;
             }
 
-            using var cmd = Database.CreateComand(Strings.AccountService_GetByName);
+            using var cmd = Database.CreateCommand(Strings.AccountService_GetByName);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.Name), accountName));
 
             using var reader = await cmd.ExecuteReaderAsync();
@@ -80,7 +80,7 @@ namespace DBAS.Vault.Services
             account.ClientId = Guid.NewGuid();
             account.ClientSecret = validSecret ? account.ClientSecret : Guid.NewGuid().ToString();
 
-            using var cmd = Database.CreateComand(Strings.AccountService_Create);
+            using var cmd = Database.CreateCommand(Strings.AccountService_Create);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.Name), account.Name));
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.TenantId), account.TenantId));
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.ClientId), account.ClientId));
@@ -108,7 +108,7 @@ namespace DBAS.Vault.Services
         {
             await Get(accountId);
 
-            using var cmd = Database.CreateComand(Strings.AccountService_Delete);
+            using var cmd = Database.CreateCommand(Strings.AccountService_Delete);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), accountId));
             await cmd.ExecuteNonQueryAsync();
 

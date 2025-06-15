@@ -48,7 +48,8 @@ services:
     networks:
         dbas-vault-pipe-test:
     volumes:
-        - dbas-vault-pipe-test-app-db-volume:/var/lib/mysql:delegated
+        - dbas-vault-pipe-test-db-volume:/var/lib/mysql:delegated
+        - ./my.cnf:/etc/mysql/my.cnf:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 3s
@@ -56,8 +57,14 @@ services:
       retries: 3
 networks:
   dbas-vault-pipe-test:
+    name: dbas-vault-pipe-test
+    driver: bridge
+    #ipam:
+    #  config:
+    #    - subnet: 172.25.0.0/16
 volumes:
-  dbas-vault-pipe-test-app-db-volume:
+  dbas-vault-pipe-test-db-volume:
+    name: dbas-vault-pipe-test-db-volume
 #secrets:
 #  name:
 #    file: ./name
